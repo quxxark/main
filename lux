@@ -1,0 +1,337 @@
+#!/usr/bin/python3.5
+import subprocess
+
+
+class Options:
+    @staticmethod
+    def run():  # Run the project
+        subprocess.call('sudo hahmi', shell=True)
+
+    @staticmethod
+    def navcmp_eu():  # Linking the EU map
+        subprocess.call('sudo rm /usr/local/HAHMI/ha-hmi/build/bin/nds', shell=True)
+        subprocess.call('sudo ln -s /opt/NAVCMP/ /usr/local/HAHMI/ha-hmi/build/bin/nds', shell=True)
+
+    @staticmethod
+    def navcmp_na():  # Linking the NA map
+        subprocess.call('sudo rm /usr/local/HAHMI/ha-hmi/build/bin/nds', shell=True)
+        subprocess.call('sudo ln -s /opt/NAVCMP_NA/ /usr/local/HAHMI/ha-hmi/build/bin/nds', shell=True)
+
+    @staticmethod
+    def navcmp_rw():  # Linking the RW map
+        subprocess.call('sudo rm /usr/local/HAHMI/ha-hmi/build/bin/nds', shell=True)
+        subprocess.call('sudo ln -s /opt/NAVCMP_RW/ /usr/local/HAHMI/ha-hmi/build/bin/nds', shell=True)
+
+    @staticmethod
+    def set_default():  # Set all settings to default values. Just a black magick. Nevermind.
+        subprocess.call('sudo rm /usr/local/HAHMI/ha-hmi/build/bin/nds', shell=True)
+        subprocess.call('sudo ln -s /opt/NAVCMP/ /usr/local/HAHMI/ha-hmi/build/bin/nds', shell=True)
+        subprocess.call('sudo rm /usr/local/HAHMI/ha-hmi/build/bin/Persistence.json', shell=True)
+        subprocess.call('sudo rm /usr/local/HAHMI/ha-hmi/build/bin/profile_manager.dat', shell=True)
+        subprocess.call('sudo find /usr/local/HAHMI/ha-hmi/build/bin/ -type f -name "*.sqlite" -delete', shell=True)
+        subprocess.call('sudo umount /mnt/usb', shell=True)
+        subprocess.call('sudo rm /tmp/initial_map_temp', shell=True)
+
+        fileName = '/usr/local/HAHMI/ha-hmi/build/bin/hmi_settings.ini'
+        fileNameCoordinates = '/usr/local/HAHMI/ha-hmi/build/bin/NavCtrlConfiguration.json'
+        gg = open(fileName)
+        strings = gg.readlines()
+        current_width_main = strings[1]
+        current_width_second = strings[3]
+        current_height_second = strings[4]
+        gg.close()
+
+        hh = open(fileNameCoordinates)
+        strings_c = hh.readlines()
+        source_text_latitude = strings_c[263]
+        source_text_longitude = strings_c[264]
+        hh.close()
+
+        default_width_main = 'MAIN_DISPLAY_WIDTH=1280\n'
+        default_width_second = 'SECOND_DISPLAY_WIDTH=720\n'         # Can be changed for needed default value
+        default_height_second = 'SECOND_DISPLAY_HEIGHT=480\n'       # Can be changed for needed default value
+        default_latitude = '            "LATITUDE" : 52.53107,\n'
+        default_longitude = '            "LONGITUDE" : 13.3849151,\n'
+
+        file = open(fileName, 'r')
+        text = file.read()
+        file.close()
+
+        file_c = open(fileNameCoordinates, 'r')
+        text_c = file_c.read()
+        file_c.close()
+
+        with open(fileName, 'w') as default_main_w:
+            default_main_w.write(text.replace(current_width_main, default_width_main))
+
+        file = open(fileName, 'r')
+        text = file.read()
+        file.close()
+
+        with open(fileName, 'w') as default_second_w:
+            default_second_w.write(text.replace(current_width_second, default_width_second))
+
+        file = open(fileName, 'r')
+        text = file.read()
+        file.close()
+
+        with open(fileName, 'w') as default_second_h:
+            default_second_h.write(text.replace(current_height_second, default_height_second))
+
+        with open(fileNameCoordinates, 'w') as set_def_latitude:
+            set_def_latitude.write(text_c.replace(source_text_latitude, default_latitude))
+
+        file_c = open(fileNameCoordinates, 'r')
+        text_c = file_c.read()
+        file_c.close()
+
+        with open(fileNameCoordinates, 'w') as set_def_longitude:
+            set_def_longitude.write(text_c.replace(source_text_longitude, default_longitude))
+
+    @staticmethod
+    def clear():  # Clear the terminal
+        subprocess.call('clear', shell=True)
+
+    @staticmethod
+    def exit_app():  # Close the framework
+        subprocess.call('exit', shell=True)
+
+    @staticmethod
+    def main_screen_resolution():  # Changing the MAIN screen resolution
+        fileName = '/usr/local/HAHMI/ha-hmi/build/bin/hmi_settings.ini'
+        gg = open(fileName)
+        strings = gg.readlines()
+        sourceText = strings[1]
+        main_screen_width = input('Enter WIDTH value: ')
+        replaceText = 'MAIN_DISPLAY_WIDTH={}\n'.format(main_screen_width)
+
+        file = open(fileName, 'r')
+        text = file.read()
+        file.close()
+        with open(fileName, 'w') as main_screen_resolution_changing:
+            main_screen_resolution_changing.write(text.replace(sourceText, replaceText))
+
+    @staticmethod
+    def second_screen_resolution():  # Changing the SECOND screen resolution
+        fileName = '/usr/local/HAHMI/ha-hmi/build/bin/hmi_settings.ini'
+        gg = open(fileName)
+        strings = gg.readlines()
+        source_text_width = strings[3]
+        source_text_height = strings[4]
+        second_screen_width = input('Enter WIDTH value: ')
+        second_screen_height = input('Enter HEIGHT value: ')
+        replace_text_width = 'SECOND_DISPLAY_WIDTH={}\n'.format(second_screen_width)
+        replace_text_height = 'SECOND_DISPLAY_HEIGHT={}\n'.format(second_screen_height)
+
+        file = open(fileName, 'r')
+        text = file.read()
+        file.close()
+        with open(fileName, 'w') as second_screen_width_changing:
+            second_screen_width_changing.write(text.replace(source_text_width, replace_text_width))
+        file = open(fileName, 'r')
+        text = file.read()
+        file.close()
+        with open(fileName, 'w') as second_screen_height_changing:
+            second_screen_height_changing.write(text.replace(source_text_height, replace_text_height))
+
+    @staticmethod
+    def db_update():  # DB Update testing preparation
+        subprocess.call('cp -R ~/updater_testing/initial_map/ /tmp/initial_map_temp/', shell=True)
+        print('!!! Success !!!')
+        subprocess.call('rm /usr/local/HAHMI/ha-hmi/build/bin/nds', shell=True)
+        subprocess.call('ln -s /tmp/initial_map_temp/ /usr/local/HAHMI/ha-hmi/build/bin/nds', shell=True)
+
+    @staticmethod
+    def coordinates():
+        subprocess.call('sudo rm /usr/local/HAHMI/ha-hmi/build/bin/Persistence.json', shell=True)
+        fileNameCoordinates = '/usr/local/HAHMI/ha-hmi/build/bin/NavCtrlConfiguration.json'
+        hh = open(fileNameCoordinates)
+        strings = hh.readlines()
+        source_text_latitude = strings[263]
+        source_text_longitude = strings[264]
+        new_latitude = input('Enter LATITUDE value (in format XX.XXXXX): ')
+        new_longitude = input('Enter LONGITUDE value (in format XX.XXXXX): ')
+        replace_latitude = '            "LATITUDE" : {},\n'.format(new_latitude)
+        replace_longitude = '            "LONGITUDE" : {},\n'.format(new_longitude)
+
+        coordinates = open(fileNameCoordinates, 'r')
+        text = coordinates.read()
+        coordinates.close()
+        with open(fileNameCoordinates, 'w') as latitude_changing:
+            latitude_changing.write(text.replace(source_text_latitude, replace_latitude))
+
+        coordinates = open(fileNameCoordinates, 'r')
+        text = coordinates.read()
+        coordinates.close()
+        with open(fileNameCoordinates, 'w') as longitude_changing:
+            longitude_changing.write(text.replace(source_text_longitude, replace_longitude))
+
+    @staticmethod
+    def installing():
+        week = input('Enter a week number (XX format): ')
+        vers = input('Enter a package version: ')
+        link = 'sudo wget -P ~/Downloads https://abs.cci.in.here.com/job/\
+donington/job/sv/job/build/job/psv-linux-x86-gcc5.4-release/{}/s3/download/outputs/\
+misc/hahmi-2018.{}.{}.deb'.format(vers, week, vers)
+        install_file = 'cd ~/Downloads && sudo dpkg -i hahmi-2018.{}.{}.deb'.format(week, vers)
+        subprocess.call(link, shell=True)
+        subprocess.call(install_file, shell=True)
+        subprocess.call('clear && sudo rm ~/Downloads/hahmi-2018.{}.{}.deb'.format(week, vers), shell=True)
+
+    @staticmethod
+    def removing():
+        subprocess.call('sudo dpkg --remove hahmi', shell=True)
+
+
+helping = """
+        Run Project:
+        > Run your project without changing
+
+        EU Map:
+        > Remove the old SDK link and Linking the Europe map
+
+        NA Map:
+        > Remove the old SDK link and Linking the North America map
+
+        RW Map:
+        > Remove the old SDK link and Linking the Rest World map
+
+        DB Update preparation:
+        > Create temporary limited DB in 'Home' folder
+        > Remove the old SDK link
+        > Linking the Limited DB for update DB testing
+
+        Set default:
+        > Removing all temporary directories
+        > Set all user / profile settings on Default 
+        > (Removing Persistence.json / profile_manager.dat / all *.sqlite files in 'bin')
+        > Set Europe map
+        > Unmount DB image
+        """
+
+tree = """
+        project:
+        > /usr/local/HAHMI/ha-hmi/build/...
+
+        EU Map:
+        > /opt/NAVCMP/...
+
+        NA Map:
+        > /opt/NAVCMP_NA/...
+
+        RW Map:
+        > /opt/NAVCMP_RW/...
+
+        DB Update:
+        > /home/<%username%>/updater_testing/initial_map/...
+        > /home/<%username%>/updater_testing/full_map.img
+
+        Map directories contains:
+        > 'EU' / 'WOM' / 'ROOT.NDS' / 'package.db' / 'package_db.cfg'
+        > 'NA' / 'WOM' / 'ROOT.NDS'
+        > 'RW' / 'WOM' / 'ROOT.NDS'
+        """
+
+links = """
+        DB Update:
+        smb://172.31.197.22/public/DB/updater_test
+
+        Map EU:
+        smb://172.31.197.22/public/DB/db_version_test/1.45.67.340/
+
+        Map NA:
+        smb://172.31.197.22/public/DB/1.45.67.340/map/NA/1.45.67.342/
+
+        Map RW:
+        smb://172.31.197.22/public/DB/1.45.67.340/map/RW
+        """
+
+
+def options():
+    print('')
+    print('      ##################################################')
+    print('      ##                                         v0.4 ##')
+    print('      ##       1. Run Project                         ##')
+    print('      ##       2. EU Map                              ##')
+    print('      ##       3. NA Map                              ##')
+    print('      ##       4. RW Map                              ##')
+    print('      ##       5. DB Update preparation               ##')
+    print('      ##       6. !!! Set default !!!                 ##')
+    print('      ##                                              ##')
+    print('      ##       "main" for changing main screen res.   ##')
+    print('      ##       "second" for changing second scr. res. ##')
+    print('      ##       "nav" for changing coordinates         ##')
+    print('      ##                                              ##')
+    print('      ##       "install" for application installing   ##')
+    print('      ##       "del" for application removing         ##')
+    print('      ##                                              ##')
+    print('      ##       "help" for more information            ##')
+    print('      ##       "tree" for see the directories tree    ##')
+    print('      ##       "links" for see the links tree         ##')
+    print('      ##       "clear" for cleaning terminal          ##')
+    print('      ##       "exit" for closing application         ##')
+    print('      ##                                              ##')
+    print('      ##################################################')
+    print('')
+    x = input('      Select the option: ')
+    print('')
+
+    if x == '1':
+        Options.run()
+        options()
+    elif x == '2':
+        Options.navcmp_eu()
+        options()
+    elif x == '3':
+        Options.navcmp_na()
+        options()
+    elif x == '4':
+        Options.navcmp_rw()
+        options()
+    elif x == '5':
+        Options.db_update()
+        options()
+    elif x == '6':
+        Options.set_default()
+        options()
+    elif x == 'main':
+        Options.main_screen_resolution()
+        options()
+    elif x == 'second':
+        Options.second_screen_resolution()
+        options()
+    elif x == 'help':
+        print(helping)
+        options()
+    elif x == 'exit':
+        Options.exit_app()
+        Options.clear()
+    elif x == 'tree':
+        print(tree)
+        options()
+    elif x == 'links':
+        print(links)
+        options()
+    elif x == 'clear':
+        Options.clear()
+        options()
+    elif x == 'nav':
+        Options.coordinates()
+        options()
+    elif x == 'del':
+        Options.removing()
+        options()
+    elif x == 'install':
+        Options.installing()
+        options()
+    else:
+        print('###############################')
+        print('##                           ##')
+        print('##   This option is absent   ##')
+        print('##                           ##')
+        print('###############################')
+        options()
+
+
+options()
+

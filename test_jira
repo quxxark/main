@@ -1,0 +1,31 @@
+#!/usr/bin/python3.5
+# -*- coding: utf-8 -*-
+from jira import JIRA
+import getpass
+
+options = {'server': 'https://saeljira.it.here.com/'}
+
+login = getpass.getpass('Enter your login: ')          # Можно захардкодить логин
+password = getpass.getpass('Enter your password: ')    # Можно захардкодить пароль
+jira = JIRA(options, basic_auth=('{}'.format(login), '{}'.format(password)))
+
+print('')
+print(' ############## ')
+print('')
+
+JQL = input('Enter JQL-request: ')
+print('')
+maximum = int(input('How many results: '))
+
+print('')
+print(' ############## ')
+print('')
+
+
+issues_in_proj = list(jira.search_issues('{}'.format(JQL), maxResults='{}'.format(maximum)))
+
+for issue_summary in issues_in_proj:
+    summary = issue_summary.fields.summary
+    print(issue_summary, '--', summary)
+
+
