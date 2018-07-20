@@ -2,8 +2,8 @@
 import requests
 import getpass
 
-link = 'https://adc.luxoft.com/confluence/login.action'
-destination = 'https://adc.luxoft.com/confluence/display/HNAVSTD/Home'
+link = ''
+destination = ''
 LOGIN = 'dkicha'
 PASSWORD = getpass.getpass('Enter your password: ')
 
