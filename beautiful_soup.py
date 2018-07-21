@@ -14,7 +14,6 @@ headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/
 
 
 with requests.Session() as s:
-    s.get(loginPage, headers=headers)
     s.post(loginPage, data=formData, headers=headers)
     response = s.get(url)
 
