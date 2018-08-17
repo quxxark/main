@@ -73,6 +73,7 @@ class SendEmail:
     def SendMessage(self, user_id, message):
         try:
             message = (self.service.users().messages().send(userId=user_id, body=message).execute())
+            print('Message had been sent successfully!')
             print('Message Id: %s' % message['id'])
             return message
         except errors.HttpError as error:
