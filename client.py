@@ -31,7 +31,7 @@ def receving (name, sock):
 host = socket.gethostbyname(socket.gethostname())
 port = 0
 
-server = ("192.168.0.101",9090)
+server = ("192.168.0.102",9090)
 
 s = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
 s.bind((host,port))
@@ -59,7 +59,7 @@ while shutdown == False:
 
 			if message != "":
 				s.sendto(("["+alias + "] :: "+message).encode("utf-8"),server)
-			
+
 			time.sleep(0.2)
 		except:
 			s.sendto(("["+alias + "] <= left chat ").encode("utf-8"),server)
