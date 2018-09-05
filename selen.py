@@ -2,18 +2,21 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import unittest
 import time
+import logging
 
-'''
-ВАЖНО!
-chrome webdriver должен находиться в PATH (windows)
-Скачать по ссылке: http://chromedriver.chromium.org/downloads
-PATH по умолчанию: C:\Users\<%ComputerName%>\AppData\Local\Microsoft\WindowsApps
-'''
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='%(asctime)s : %(levelname)s : %(message)s'
+)
 
 
 class GoogleSearch(unittest.TestCase):
     def setUp(self):  # Precondition. Это едйствие будет запускаться вначале каждого теста
-        self.driver = webdriver.Chrome()  # Выбрали браузер
+        self.options = webdriver.ChromeOptions()
+        self.options.add_argument('--headless')
+        self.options.add_argument('--no-sandbox')
+        self.options.add_argument('--disable-dev-shm-usage')
+        self.driver = webdriver.Chrome('chromedriver', options=self.options)
         self.driver.get('https://google.com')  # Вначале каждого теста открывать страницу
 
     def test_01(self):
@@ -49,9 +52,3 @@ class GoogleSearch(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
-
-
-
-
-
-
