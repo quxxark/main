@@ -3,9 +3,9 @@
 import socket
 import time
 
-host = "172.25.42.12"  # hardcodding a Server's IP
-# host = input("Enter the Server's IP: ") #adding a server IP manually
-# host = socket.gethostbyname(socket.gethostname())  # addding a server IP automatically
+# host = ""  # hardcodding a Server's IP (strongly recommended)
+host = input("Enter the current IP: ") #adding a server IP manually
+# host = socket.gethostbyname(socket.gethostname())  # addding a server IP automatically (unstable)
 port = 9090
 clients = []  #  connected user's list
 
