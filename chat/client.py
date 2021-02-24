@@ -1,25 +1,21 @@
 #!/usr/bin/python3
-
-import socket
-import threading
-import time
-
-key = 8194
-
-shutdown = False
-join = False
+import socket, threading, time
 
 
-def receiving(name, sock):
-    while not shutdown:  # Workaround. With 'True' value is not working
+SHUTDOWN = False
+JOIN = False
+CLIENT_TIMEOUT = 0.2
+
+
+def receiving(sock):
+    while not SHUTDOWN:
         try:
             while True:
                 data, addr = sock.recvfrom(1024)
                 print(data.decode("utf-8"))
-
-                time.sleep(0.2)
+                time.sleep(CLIENT_TIMEOUT)
         except:
-            pass
+            print('Something went wrong')
 
 
 host = socket.gethostbyname(socket.gethostname())
@@ -27,32 +23,30 @@ port = 0
 server_ip = input("Enter the server IP: ")  # strongly recommended to hardcode the server-IP value
 server = (server_ip, 9090)
 
-
 s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 s.bind((host, port))
-s.setblocking(0)
+s.setblocking(False)
 
-alias = input("Name: ")
+username = input("Name: ")
 
 rT = threading.Thread(target=receiving, args=("RecvThread", s))
 rT.start()
 
 
-while shutdown == False:
-    if join == False:
-        s.sendto(("["+alias + "] => join chat ").encode("utf-8"), server)
-        join = True
+while SHUTDOWN is False:
+    if JOIN is False:
+        s.sendto(("["+username+"] => join chat").encode("utf-8"), server)
+        JOIN = True
     else:
         try:
             message = input('>>> ')
 
             if message != "":
-                s.sendto(("["+alias + "] :: "+message).encode("utf-8"), server)
-
-            time.sleep(0.2)
+                s.sendto(("["+username+"] :: "+message).encode("utf-8"), server)
+            time.sleep(CLIENT_TIMEOUT)
         except:
-            s.sendto(("["+alias + "] <= left chat ").encode("utf-8"), server)
-            shutdown = True
+            s.sendto(("["+username+"] <= left chat ").encode("utf-8"), server)
+            SHUTDOWN = True
 
 rT.join()
 s.close()

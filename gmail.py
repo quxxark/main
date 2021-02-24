@@ -20,7 +20,9 @@ https://developers.google.com/gmail/api/quickstart/python?hl=ru
 2. Быть в PATH директории
 """
 
+
 class SendEmail:
+
     def __init__(self, service):
         self.service = service
 

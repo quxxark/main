@@ -1,4 +1,4 @@
-import subprocess, time, os
+import subprocess, os
 
 
 SERVER_PATH = ''  # Path to the server.py file
