@@ -8,9 +8,9 @@ from urllib.parse import urlparse
 PORT = 8000
 DIR = '/work/dir/path'
 ADDRESS = '127.0.0.1'
-USERNAME = "username"
-PASSWORD = "password"
-SECURE_URL = "/auth.html"
+USERNAME = 'username'
+PASSWORD = 'password'
+SECURE_URL = '/auth.html'
 
 
 class Handler(http.server.SimpleHTTPRequestHandler):
@@ -21,16 +21,16 @@ class Handler(http.server.SimpleHTTPRequestHandler):
 
     def do_AUTHHEAD(self):
         self.send_response(401)
-        self.send_header("WWW-Authenticate", 'Basic realm="Authorization"')
-        self.send_header("Content-type", "text/html")
+        self.send_header('WWW-Authenticate', 'Basic realm="Authorization"')
+        self.send_header('Content-type', 'text/html')
         self.end_headers()
 
     def do_GET(self):
         logging.error(self.headers)
         if urlparse(self.path).path == SECURE_URL:
-            if self.headers.get("Authorization") is None:
+            if self.headers.get('Authorization') is None:
                 self.do_AUTHHEAD()
-            elif self.headers.get("Authorization") == "Basic " + self._auth:
+            elif self.headers.get('Authorization') == 'Basic ' + self._auth:
                 http.server.SimpleHTTPRequestHandler.do_GET(self)
             else:
                 self.do_AUTHHEAD()
@@ -46,9 +46,9 @@ class Handler(http.server.SimpleHTTPRequestHandler):
             self.send_error(500)
         else:
             logging.error(self.headers)
-            form = cgi.FieldStorage(fp=self.rfile, headers=self.headers,
-                                    environ={'REQUEST_METHOD': 'POST',
-                                             'CONTENT_TYPE': self.headers['Content-Type']})
+            form = cgi.FieldStorage(fp=self.rfile,
+                                    headers=self.headers,
+                                    environ={'REQUEST_METHOD': 'POST', 'CONTENT_TYPE': self.headers['Content-Type']})
             for item in form.list:
                 logging.error(item)
             http.server.SimpleHTTPRequestHandler.do_GET(self)
